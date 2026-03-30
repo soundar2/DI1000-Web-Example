@@ -1,16 +1,19 @@
 using System.IO.Ports;
+
+using Microsoft.VisualBasic;
 namespace DI1000_Example
 {
-    public partial class frmDi1000 : Form
+    public partial class frmDi10001k : Form
     {
         private SerialPort? _thisPort = null;
         private bool _shouldStopReading = false;
-        public frmDi1000()
+        private bool _isTaring = false;
+        public frmDi10001k()
         {
             InitializeComponent();
         }
 
-        private void frmDi1000_Load(object sender, EventArgs e)
+        private void frmDi10001k_Load(object sender, EventArgs e)
         {
             foreach (var portName in SerialPort.GetPortNames())
             {
@@ -20,9 +23,6 @@ namespace DI1000_Example
             {
                 cmbPort.SelectedIndex = 0;
             }
-            cmbBaud.Items.Add("9600");
-            cmbBaud.Items.Add("230400");
-            cmbBaud.SelectedIndex = 0;
         }
 
         private void btnOpenPort_Click(object sender, EventArgs e)
@@ -34,7 +34,7 @@ namespace DI1000_Example
             //
             //set up port and open
             //
-            _thisPort = new SerialPort(cmbPort.Text, Convert.ToInt32(cmbBaud.Text), Parity.None, 8, StopBits.One);
+            _thisPort = new SerialPort(cmbPort.Text, 230400, Parity.None, 8, StopBits.One);
             _thisPort.Handshake = Handshake.None;
             _thisPort.ReadBufferSize = 128000;
             _thisPort.ReadTimeout = 1000;
@@ -43,7 +43,7 @@ namespace DI1000_Example
             try
             {
                 _thisPort.Open();
-                lblMessage.Text = $"{cmbPort.Text} opened at {cmbBaud.Text} baud.";
+                lblMessage.Text = $"{cmbPort.Text} opened at 230400 baud.";
                 lblMessage.Visible = true;
                 btnStart.Enabled = true;
                 btnStop.Enabled = false;
@@ -69,15 +69,7 @@ namespace DI1000_Example
             if (_thisPort is null) return;
             btnStart.Enabled = false;
             btnStop.Enabled = true;
-            if (optSingle.Checked)
-            {
-                await ReadOneValueAtATime();
-            }
-            else if (optContinuous.Checked)
-            {
-                await ReadContinuosly();
-
-            }
+            await ReadContinuosly();
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
@@ -86,42 +78,62 @@ namespace DI1000_Example
             btnStart.Enabled = true;
             btnStop.Enabled = false;
         }
-        private async Task ReadOneValueAtATime()
-        {
-            _shouldStopReading = false;
-            while (_shouldStopReading == false)
-            {
-                try
-                {
-                    _thisPort!.Write("W\r");
-                    var buffer = _thisPort!.ReadTo("\n");
-                    if (buffer.Length != 13) continue; //check for valid data
-                    txtWeight.Text = buffer;//convert to double and process
-                    await Task.Delay(1); //give GUI time to catch up
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error reading from port", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-                }
-            }
-        }
         private async Task ReadContinuosly()
         {
             _shouldStopReading = false;
             _thisPort!.Write("A\rA\r"); //stop if already streaming
             await Task.Delay(250);
             _thisPort!.DiscardInBuffer();
-            _thisPort!.Write("WC\r"); //issue this command once
-                                      //to streaming mode
-                                      //to stop send 'A'
+            //
+            //read weight per count
+            //
+            _thisPort.Write("SWC\r");
+            await Task.Delay(100);
+            var buffer = _thisPort.ReadLine().Trim();
+            double weightPerCount = Convert.ToDouble(buffer);
+            if (weightPerCount == 0)
+            {
+                //something is wrong
+                MessageBox.Show("Weight per count is zero. Check device Calibration.", "Device Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            //
+            //read previous tare counts
+            //
+            _thisPort.Write("ST0\r");
+            await Task.Delay(100);
+            buffer = _thisPort.ReadLine().Trim();
+            int tareCounts = Convert.ToInt32(buffer);
+            //
+            //give command to output at high speed
+            //
+            _thisPort!.Write("H\r"); //issue this command once
+                                     //to streaming mode
+                                     //to stop send 'A'
+            int rawCounts = 0;
             while (_shouldStopReading == false)
             {
                 try
                 {
-                    var buffer = _thisPort!.ReadTo("\n");
-                    if (buffer.Length != 13) continue; //check for valid data
-                    txtWeight.Text = buffer;//convert to double and process
+                    buffer = _thisPort!.ReadTo("\r").Trim();
+                    if (buffer[0] == '-')
+                    {
+                        rawCounts = -1 * Convert.ToInt32(buffer.Substring(1), 16);
+                    }
+                    else
+                    {
+                        rawCounts = Convert.ToInt32(buffer.Substring(1), 16);
+                    }
+                    if (rawCounts < 2) continue; //ignore small values that are likely glitches
+                    //are we taring the sensor?
+                    if (_isTaring)
+                    {
+                        tareCounts = rawCounts;
+                        _isTaring = false;
+                    }
+                    int weightCounts = rawCounts - tareCounts;
+                    double weight = weightCounts * weightPerCount;
+                    txtWeight.Text = weight.ToString("F3");
                     await Task.Delay(1); //give GUI time to catch up
                 }
                 catch (Exception ex)
@@ -132,9 +144,14 @@ namespace DI1000_Example
             }
         }
 
-        private void frmDi1000_FormClosed(object sender, FormClosedEventArgs e)
+        private void frmDi10001k_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void cmdTare_Click(object sender, EventArgs e)
+        {
+            _isTaring = true;
         }
     }
 }

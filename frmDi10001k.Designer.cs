@@ -1,6 +1,6 @@
 ﻿namespace DI1000_Example
 {
-    partial class frmDi1000
+    partial class frmDi10001k
     {
         /// <summary>
         ///  Required designer variable.
@@ -35,12 +35,10 @@
             btnOpenPort = new Button();
             btnClosePort = new Button();
             cmbPort = new ComboBox();
-            cmbBaud = new ComboBox();
-            optContinuous = new RadioButton();
-            optSingle = new RadioButton();
             txtWeight = new TextBox();
-            label2 = new Label();
             lblMessage = new Label();
+            label4 = new Label();
+            cmdTare = new Button();
             SuspendLayout();
             // 
             // label1
@@ -66,7 +64,7 @@
             // btnStart
             // 
             btnStart.BackColor = Color.Lime;
-            btnStart.Location = new Point(38, 218);
+            btnStart.Location = new Point(38, 228);
             btnStart.Name = "btnStart";
             btnStart.Size = new Size(138, 41);
             btnStart.TabIndex = 7;
@@ -77,7 +75,7 @@
             // btnStop
             // 
             btnStop.BackColor = Color.FromArgb(255, 192, 192);
-            btnStop.Location = new Point(38, 280);
+            btnStop.Location = new Point(38, 290);
             btnStop.Name = "btnStop";
             btnStop.Size = new Size(138, 41);
             btnStop.TabIndex = 8;
@@ -88,7 +86,7 @@
             // btnOpenPort
             // 
             btnOpenPort.BackColor = SystemColors.Control;
-            btnOpenPort.Location = new Point(38, 156);
+            btnOpenPort.Location = new Point(38, 121);
             btnOpenPort.Name = "btnOpenPort";
             btnOpenPort.Size = new Size(138, 41);
             btnOpenPort.TabIndex = 9;
@@ -99,7 +97,7 @@
             // btnClosePort
             // 
             btnClosePort.BackColor = SystemColors.Control;
-            btnClosePort.Location = new Point(38, 342);
+            btnClosePort.Location = new Point(38, 352);
             btnClosePort.Name = "btnClosePort";
             btnClosePort.Size = new Size(138, 41);
             btnClosePort.TabIndex = 10;
@@ -116,59 +114,19 @@
             cmbPort.Size = new Size(121, 29);
             cmbPort.TabIndex = 11;
             // 
-            // cmbBaud
-            // 
-            cmbBaud.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbBaud.FormattingEnabled = true;
-            cmbBaud.Location = new Point(177, 61);
-            cmbBaud.Name = "cmbBaud";
-            cmbBaud.Size = new Size(121, 29);
-            cmbBaud.TabIndex = 12;
-            // 
-            // optContinuous
-            // 
-            optContinuous.AutoSize = true;
-            optContinuous.Location = new Point(283, 107);
-            optContinuous.Name = "optContinuous";
-            optContinuous.Size = new Size(294, 25);
-            optContinuous.TabIndex = 5;
-            optContinuous.TabStop = true;
-            optContinuous.Text = "Read loads continuously at high speed";
-            optContinuous.UseVisualStyleBackColor = true;
-            // 
-            // optSingle
-            // 
-            optSingle.AutoSize = true;
-            optSingle.Location = new Point(38, 107);
-            optSingle.Name = "optSingle";
-            optSingle.Size = new Size(239, 25);
-            optSingle.TabIndex = 4;
-            optSingle.TabStop = true;
-            optSingle.Text = "Read loads one value at a time";
-            optSingle.UseVisualStyleBackColor = true;
-            // 
             // txtWeight
             // 
-            txtWeight.Location = new Point(193, 225);
+            txtWeight.Location = new Point(193, 235);
             txtWeight.Name = "txtWeight";
             txtWeight.Size = new Size(133, 29);
             txtWeight.TabIndex = 13;
             txtWeight.TextAlign = HorizontalAlignment.Right;
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(302, 135);
-            label2.Name = "label2";
-            label2.Size = new Size(240, 21);
-            label2.TabIndex = 14;
-            label2.Text = "Set Latency=1 in device manager";
-            // 
             // lblMessage
             // 
             lblMessage.AutoSize = true;
             lblMessage.ForeColor = Color.Firebrick;
-            lblMessage.Location = new Point(194, 166);
+            lblMessage.Location = new Point(194, 131);
             lblMessage.Margin = new Padding(4, 0, 4, 0);
             lblMessage.Name = "lblMessage";
             lblMessage.Size = new Size(19, 21);
@@ -176,32 +134,51 @@
             lblMessage.Text = "...";
             lblMessage.Visible = false;
             // 
-            // frmDi1000
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(177, 64);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(64, 21);
+            label4.TabIndex = 16;
+            label4.Text = "230400";
+            // 
+            // cmdTare
+            // 
+            cmdTare.BackColor = SystemColors.Control;
+            cmdTare.Location = new Point(354, 228);
+            cmdTare.Name = "cmdTare";
+            cmdTare.Size = new Size(138, 41);
+            cmdTare.TabIndex = 17;
+            cmdTare.Text = "Tare/Zero";
+            cmdTare.UseVisualStyleBackColor = false;
+            cmdTare.Click += cmdTare_Click;
+            // 
+            // frmDi10001k
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(589, 432);
+            Controls.Add(cmdTare);
+            Controls.Add(label4);
             Controls.Add(lblMessage);
-            Controls.Add(label2);
             Controls.Add(txtWeight);
-            Controls.Add(cmbBaud);
             Controls.Add(cmbPort);
             Controls.Add(btnClosePort);
             Controls.Add(btnOpenPort);
             Controls.Add(btnStop);
             Controls.Add(btnStart);
-            Controls.Add(optContinuous);
-            Controls.Add(optSingle);
             Controls.Add(label3);
             Controls.Add(label1);
             Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4);
-            Name = "frmDi1000";
+            Name = "frmDi10001k";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DI1000 Example";
-            FormClosed += frmDi1000_FormClosed;
-            Load += frmDi1000_Load;
+            FormClosed += frmDi10001k_FormClosed;
+            Load += frmDi10001k_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -215,11 +192,9 @@
         private Button btnOpenPort;
         private Button btnClosePort;
         private ComboBox cmbPort;
-        private ComboBox cmbBaud;
-        private RadioButton optContinuous;
-        private RadioButton optSingle;
         private TextBox txtWeight;
-        private Label label2;
         private Label lblMessage;
+        private Label label4;
+        private Button cmdTare;
     }
 }
