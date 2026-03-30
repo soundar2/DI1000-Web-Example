@@ -63,8 +63,27 @@ namespace DI1000_Example
         private async void btnStart_Click(object sender, EventArgs e)
         {
             if (_thisPort is null) return;
+            if (optSingle.Checked)
+            {
+                await ReadOneValueAtATime();
+            }
+            else if (optContinuous.Checked)
+            {
+                await ReadContinuosly();
+
+            }
+        }
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            _shouldStopReading = true;
+            btnStart.Enabled = true;
+            btnStop.Enabled = false;
+            _thisPort?.Write("A\r"); //stop streaming mode if in that mode
+            _thisPort = null;
+        }
+        private async Task ReadOneValueAtATime()
+        {
             btnStart.Enabled = false;
-            btnStop.Enabled = true;
             _shouldStopReading = false;
             while (_shouldStopReading == false)
             {
@@ -74,7 +93,7 @@ namespace DI1000_Example
                     var buffer = _thisPort!.ReadTo("\n");
                     if (buffer.Length != 13) continue; //check for valid data
                     txtWeight.Text = buffer;//convert to double and process
-                    await Task.Delay(100);
+                    await Task.Delay(1); //give GUI time to catch up
                 }
                 catch (Exception ex)
                 {
@@ -83,13 +102,28 @@ namespace DI1000_Example
                 }
             }
         }
-
-        private void btnStop_Click(object sender, EventArgs e)
+        private async Task ReadContinuosly()
         {
-            _shouldStopReading = true;
-            btnStart.Enabled = true;
-            btnStop.Enabled = false;
-            _thisPort = null;
+            btnStart.Enabled = false;
+            _shouldStopReading = false;
+            _thisPort!.Write("WC\r"); //issue this command once
+                                      //to streaming mode
+                                      //to stop send 'A'
+            while (_shouldStopReading == false)
+            {
+                try
+                {
+                    var buffer = _thisPort!.ReadTo("\n");
+                    if (buffer.Length != 13) continue; //check for valid data
+                    txtWeight.Text = buffer;//convert to double and process
+                    await Task.Delay(1); //give GUI time to catch up
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error reading from port", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                }
+            }
         }
     }
 }
