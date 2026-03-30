@@ -36,7 +36,7 @@
             btnClosePort = new Button();
             cmbPort = new ComboBox();
             cmbBaud = new ComboBox();
-            optContinuos = new RadioButton();
+            optContinuous = new RadioButton();
             optSingle = new RadioButton();
             txtWeight = new TextBox();
             label2 = new Label();
@@ -125,16 +125,16 @@
             cmbBaud.Size = new Size(121, 29);
             cmbBaud.TabIndex = 12;
             // 
-            // optContinuos
+            // optContinuous
             // 
-            optContinuos.AutoSize = true;
-            optContinuos.Location = new Point(283, 107);
-            optContinuos.Name = "optContinuos";
-            optContinuos.Size = new Size(294, 25);
-            optContinuos.TabIndex = 5;
-            optContinuos.TabStop = true;
-            optContinuos.Text = "Read loads continuously at high speed";
-            optContinuos.UseVisualStyleBackColor = true;
+            optContinuous.AutoSize = true;
+            optContinuous.Location = new Point(283, 107);
+            optContinuous.Name = "optContinuous";
+            optContinuous.Size = new Size(294, 25);
+            optContinuous.TabIndex = 5;
+            optContinuous.TabStop = true;
+            optContinuous.Text = "Read loads continuously at high speed";
+            optContinuous.UseVisualStyleBackColor = true;
             // 
             // optSingle
             // 
@@ -190,7 +190,7 @@
             Controls.Add(btnOpenPort);
             Controls.Add(btnStop);
             Controls.Add(btnStart);
-            Controls.Add(optContinuos);
+            Controls.Add(optContinuous);
             Controls.Add(optSingle);
             Controls.Add(label3);
             Controls.Add(label1);
@@ -215,7 +215,7 @@
         private Button btnClosePort;
         private ComboBox cmbPort;
         private ComboBox cmbBaud;
-        private RadioButton optContinuos;
+        private RadioButton optContinuous;
         private RadioButton optSingle;
         private TextBox txtWeight;
         private Label label2;

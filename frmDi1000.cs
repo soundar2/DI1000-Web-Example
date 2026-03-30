@@ -45,6 +45,8 @@ namespace DI1000_Example
                 _thisPort.Open();
                 lblMessage.Text = $"{cmbPort.Text} opened at {cmbBaud.Text} baud.";
                 lblMessage.Visible = true;
+                btnStart.Enabled = true;
+                btnStop.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -58,6 +60,8 @@ namespace DI1000_Example
             _thisPort?.Close();
             lblMessage.Text = $"{cmbPort.Text} closed.";
             lblMessage.Visible = true;
+            btnStart.Enabled = false;
+            btnStop.Enabled = false;
         }
 
         private async void btnStart_Click(object sender, EventArgs e)
@@ -84,6 +88,7 @@ namespace DI1000_Example
         private async Task ReadOneValueAtATime()
         {
             btnStart.Enabled = false;
+            btnStop.Enabled = true;
             _shouldStopReading = false;
             while (_shouldStopReading == false)
             {
@@ -102,28 +107,13 @@ namespace DI1000_Example
                 }
             }
         }
-        private async Task ReadContinuosly()
+
+        private void btnStop_Click(object sender, EventArgs e)
         {
-            btnStart.Enabled = false;
-            _shouldStopReading = false;
-            _thisPort!.Write("WC\r"); //issue this command once
-                                      //to streaming mode
-                                      //to stop send 'A'
-            while (_shouldStopReading == false)
-            {
-                try
-                {
-                    var buffer = _thisPort!.ReadTo("\n");
-                    if (buffer.Length != 13) continue; //check for valid data
-                    txtWeight.Text = buffer;//convert to double and process
-                    await Task.Delay(1); //give GUI time to catch up
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error reading from port", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-                }
-            }
+            _shouldStopReading = true;
+            btnStart.Enabled = true;
+            btnStop.Enabled = false;
+            _thisPort = null;
         }
     }
 }
