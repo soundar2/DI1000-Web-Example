@@ -40,6 +40,7 @@
             optSingle = new RadioButton();
             txtWeight = new TextBox();
             label2 = new Label();
+            lblMessage = new Label();
             SuspendLayout();
             // 
             // label1
@@ -71,6 +72,7 @@
             btnStart.TabIndex = 7;
             btnStart.Text = "Start Reading";
             btnStart.UseVisualStyleBackColor = false;
+            btnStart.Click += btnStart_Click;
             // 
             // btnStop
             // 
@@ -81,6 +83,7 @@
             btnStop.TabIndex = 8;
             btnStop.Text = "Stop Reading";
             btnStop.UseVisualStyleBackColor = false;
+            btnStop.Click += btnStop_Click;
             // 
             // btnOpenPort
             // 
@@ -91,6 +94,7 @@
             btnOpenPort.TabIndex = 9;
             btnOpenPort.Text = "Open Port";
             btnOpenPort.UseVisualStyleBackColor = false;
+            btnOpenPort.Click += btnOpenPort_Click;
             // 
             // btnClosePort
             // 
@@ -101,6 +105,7 @@
             btnClosePort.TabIndex = 10;
             btnClosePort.Text = "Close Port";
             btnClosePort.UseVisualStyleBackColor = false;
+            btnClosePort.Click += btnClosePort_Click;
             // 
             // cmbPort
             // 
@@ -115,7 +120,6 @@
             // 
             cmbBaud.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbBaud.FormattingEnabled = true;
-            cmbBaud.Items.AddRange(new object[] { "9600", "230400" });
             cmbBaud.Location = new Point(177, 61);
             cmbBaud.Name = "cmbBaud";
             cmbBaud.Size = new Size(121, 29);
@@ -160,11 +164,24 @@
             label2.TabIndex = 14;
             label2.Text = "Set Latency=1 in device manager";
             // 
+            // lblMessage
+            // 
+            lblMessage.AutoSize = true;
+            lblMessage.ForeColor = Color.Firebrick;
+            lblMessage.Location = new Point(194, 166);
+            lblMessage.Margin = new Padding(4, 0, 4, 0);
+            lblMessage.Name = "lblMessage";
+            lblMessage.Size = new Size(19, 21);
+            lblMessage.TabIndex = 15;
+            lblMessage.Text = "...";
+            lblMessage.Visible = false;
+            // 
             // frmDi1000
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(589, 398);
+            ClientSize = new Size(589, 432);
+            Controls.Add(lblMessage);
             Controls.Add(label2);
             Controls.Add(txtWeight);
             Controls.Add(cmbBaud);
@@ -202,5 +219,6 @@
         private RadioButton optSingle;
         private TextBox txtWeight;
         private Label label2;
+        private Label lblMessage;
     }
 }
