@@ -88,8 +88,8 @@ namespace DI1000_Example
             //read weight per count
             //
             _thisPort.Write("SWC\r");
-            await Task.Delay(100);
-            var buffer = _thisPort.ReadLine().Trim();
+            await Task.Delay(500);
+            var buffer = _thisPort.ReadTo("\r").Trim();
             double weightPerCount = Convert.ToDouble(buffer);
             if (weightPerCount == 0)
             {
@@ -101,8 +101,8 @@ namespace DI1000_Example
             //read previous tare counts
             //
             _thisPort.Write("ST0\r");
-            await Task.Delay(100);
-            buffer = _thisPort.ReadLine().Trim();
+            await Task.Delay(500);
+            buffer = _thisPort.ReadTo("\r").Trim();
             int tareCounts = Convert.ToInt32(buffer);
             //
             //give command to output at high speed
