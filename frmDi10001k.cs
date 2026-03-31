@@ -151,7 +151,14 @@ namespace DI1000_Example
 
         private void cmdTare_Click(object sender, EventArgs e)
         {
+            //a hardware tare can be done by sending a "CT0\r" command.
+            //We have to stop reading the sensor before we can send a hardware tare command
+            //A hardware tare would be necessary if you wanted the tare to persist after power is removed from the sensor
+            //then on power up you would read the tare counts by sending
+            //"ST0\r" and subtract that from the raw counts before multiplying by weight per count
+
             _isTaring = true;
+            
         }
     }
 }
